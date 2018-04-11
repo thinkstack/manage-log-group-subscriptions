@@ -8,11 +8,11 @@ class TestLambda(unittest.TestCase):
 
     def setUp(self):
         self.log_group_name_prefix = '/aws/prefix/'
-        self.log_group_names = [
+        self.log_group_names = set([
             self.log_group_name_prefix + 'group_1',
             self.log_group_name_prefix + 'group_2',
             self.log_group_name_prefix + 'group_3'
-        ]
+        ])
 
 
     def test_get_lambda_log_groups(self):
@@ -33,5 +33,5 @@ class TestLambda(unittest.TestCase):
             response = log_handler.get_log_groups_with_subscription_filters(lambda_client)
 
             lambda_client.describe_subscription_filters.assert_called_once_with()
-            self.assertEqual(response, [self.log_group_name_prefix + 'group_1'])
+            self.assertEqual(response, set([self.log_group_name_prefix + 'group_1']))
 
