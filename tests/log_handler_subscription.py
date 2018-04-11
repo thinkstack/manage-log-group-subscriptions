@@ -11,7 +11,7 @@ class TestLambda(unittest.TestCase):
         self.log_group_names = set([
             self.log_group_name_prefix + 'group_1',
             self.log_group_name_prefix + 'group_2',
-            self.log_group_name_prefix + 'group_3'
+            'group_3'
         ])
         self.log_handler_arn = '12345678A'
 
@@ -39,7 +39,7 @@ class TestLambda(unittest.TestCase):
     def test_groups_with_no_subscriptions(self):
         result = log_handler_subscription.log_groups_with_no_subscriptions(self.log_group_names, set(['/aws/prefix/group_2']))
 
-        self.assertEqual(result, set([self.log_group_name_prefix + 'group_1', self.log_group_name_prefix + 'group_3']))
+        self.assertEqual(result, set([self.log_group_name_prefix + 'group_1', 'group_3']))
 
     def test_get_log_handler_arn(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -50,3 +50,23 @@ class TestLambda(unittest.TestCase):
 
             lambda_client.get_function.assert_called_once_with(FunctionName='log_handler')
             self.assertEqual(response, self.log_handler_arn)
+
+    def test_create_subscription_filters(self):
+        log_client = MagicMock()
+        log_handler_subscription.create_subscription_filters(log_client, self.log_group_names, self.log_handler_arn)
+        calls = [
+            call(logGroupName=self.log_group_name_prefix + 'group_1', filterName='group_1-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn),
+            call(logGroupName=self.log_group_name_prefix + 'group_2', filterName='group_2-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn),
+            call(logGroupName='group_3', filterName='group_3-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn)
+        ]
+
+        log_client.put_subscription_filter.assert_has_calls(calls, any_order=True)
+
+    def test_subsciption_filters_name_ending_in_slash(self):
+        log_client = MagicMock()
+        log_handler_subscription.create_subscription_filters(log_client, set(['/weird_name/']), self.log_handler_arn)
+        calls = [
+            call(logGroupName='/weird_name/', filterName='weird_name-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn)
+        ]
+
+        log_client.put_subscription_filter.assert_has_calls(calls, any_order=True)

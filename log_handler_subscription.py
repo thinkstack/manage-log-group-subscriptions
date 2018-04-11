@@ -3,14 +3,14 @@ import json
 
 #Add exception handling for all IO
 
-def get_lambda_log_group_names(lambda_client):
-    response = lambda_client.describe_log_groups()
+def get_lambda_log_group_names(log_client):
+    response = log_client.describe_log_groups()
     # retry on token
     response_json = json.load(response)
     return set(map(lambda x: x['logGroupName'], response_json['logGroups']))
 
-def get_log_groups_with_subscription_filters(lambda_client):
-    response = lambda_client.describe_subscription_filters()
+def get_log_groups_with_subscription_filters(log_client):
+    response = log_client.describe_subscription_filters()
     #retry on token
     response_json = json.load(response)
     return set(map(lambda x: x['logGroupName'], response_json['subscriptionFilters']))
@@ -21,5 +21,22 @@ def log_groups_with_no_subscriptions(group_names, groups_with_subscriptions):
 def get_log_handler_arn(lambda_client):
     response = lambda_client.get_function(FunctionName='log_handler')
     response_json = json.load(response)
-
     return response_json['Configuration']['FunctionArn']
+
+def create_subscription_filters(log_client, log_group_names, log_handler_arn):
+    for log_group_name in log_group_names:
+        function_name = get_function_name(log_group_name)
+        log_client.put_subscription_filter(
+            logGroupName=log_group_name,
+            filterName=function_name + '-log-handler-lambda-subscription',
+            filterPattern='',
+            destinationArn=log_handler_arn
+        )
+    return
+
+def get_function_name(log_group_name):
+    arr = log_group_name.split('/')
+    if len(arr[-1]) == 0:
+        return arr[-2]
+    else:
+        return arr[-1]

@@ -19,7 +19,7 @@
       "kmsKeyId": "string"
     },
     {
-      "logGroupName": "/aws/prefix/group_3",
+      "logGroupName": "group_3",
       "creationTime": 123,
       "retentionInDays": 123,
       "metricFilterCount": 123,
