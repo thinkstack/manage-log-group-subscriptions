@@ -15,4 +15,5 @@ def get_log_groups_with_subscription_filters(lambda_client):
     response_json = json.load(response)
     return set(map(lambda x: x['logGroupName'], response_json['subscriptionFilters']))
 
-# def log_groups_with_no_subscriptions(group_names, groups_with_subscriptions):
+def log_groups_with_no_subscriptions(group_names, groups_with_subscriptions):
+    return group_names - groups_with_subscriptions

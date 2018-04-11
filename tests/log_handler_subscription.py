@@ -35,3 +35,8 @@ class TestLambda(unittest.TestCase):
             lambda_client.describe_subscription_filters.assert_called_once_with()
             self.assertEqual(response, set([self.log_group_name_prefix + 'group_1']))
 
+    def test_groups_with_no_subscriptions(self):
+        result = log_handler.log_groups_with_no_subscriptions(self.log_group_names, set(['/aws/prefix/group_2']))
+
+        self.assertEqual(result, set([self.log_group_name_prefix + 'group_1', self.log_group_name_prefix + 'group_3']))
+
