@@ -17,3 +17,9 @@ def get_log_groups_with_subscription_filters(lambda_client):
 
 def log_groups_with_no_subscriptions(group_names, groups_with_subscriptions):
     return group_names - groups_with_subscriptions
+
+def get_log_handler_arn(lambda_client):
+    response = lambda_client.get_function(FunctionName='log_handler')
+    response_json = json.load(response)
+
+    return response_json['Configuration']['FunctionArn']
