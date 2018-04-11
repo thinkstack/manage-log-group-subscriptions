@@ -21,7 +21,7 @@ class TestLambda(unittest.TestCase):
         with open(dir_path + "/test-data/log-group-response.json") as json_data:
             lambda_client = MagicMock()
             lambda_client.describe_log_groups.return_value = json_data
-            response = log_handler_subscription.get_lambda_log_group_names(lambda_client)
+            response = log_handler_subscription.get_log_group_names(lambda_client)
 
             lambda_client.describe_log_groups.assert_called_once_with()
             self.assertEqual(response, self.log_group_names)

@@ -1,9 +1,19 @@
 #!/usr/bin/env python
+import boto3
 import json
 
 #Add exception handling for all IO
 
-def get_lambda_log_group_names(log_client):
+def lambda_handler(event, context):
+    log_client = boto3.client('logs')
+    lambda_client = boto3.client('lambda')
+    log_handler_arn = get_log_handler_arn(lambda_client)
+    log_groups = get_log_group_names(log_client)
+    log_groups_with_subscription_filters = get_log_groups_with_subscription_filters(log_client)
+    target_log_groups = log_groups_with_no_subscriptions(log_groups, log_groups_with_subscription_filters)
+    create_subscription_filters(log_client, target_log_groups, log_handler_arn)
+
+def get_log_group_names(log_client):
     response = log_client.describe_log_groups()
     # retry on token
     response_json = json.load(response)
