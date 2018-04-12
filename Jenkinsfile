@@ -7,7 +7,7 @@ pipeline {
             steps {
                 step([$class: 'WsCleanup'])
                 checkout(scm)
-                sh("""virtualenv venv
+                sh("""virtualenv -p python3 venv
         . venv/bin/activate
         pip install -r requirements-tests.txt
         nosetests -v --with-cover --cover-erase --cover-package=log_handler_subscription tests/*.py
