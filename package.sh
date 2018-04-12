@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -xeou
-yum install -y zip python36u python36u-pip
+yum install -y zip python27 python27-pip
 pip install -U pip
 
 BASEDIR=/data
