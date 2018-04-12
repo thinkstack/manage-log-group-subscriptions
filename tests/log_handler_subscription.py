@@ -8,11 +8,11 @@ class TestLambda(unittest.TestCase):
 
     def setUp(self):
         self.log_group_name_prefix = '/aws/prefix/'
-        self.log_group_names = set([
+        self.log_group_names = {
             self.log_group_name_prefix + 'group_1',
             self.log_group_name_prefix + 'group_2',
             'group_3'
-        ])
+        }
         self.log_handler_arn = '12345678A'
 
 
@@ -34,12 +34,12 @@ class TestLambda(unittest.TestCase):
             response = log_handler_subscription.get_log_groups_with_subscription_filters(lambda_client)
 
             lambda_client.describe_subscription_filters.assert_called_once_with()
-            self.assertEqual(response, set([self.log_group_name_prefix + 'group_1']))
+            self.assertEqual(response, {self.log_group_name_prefix + 'group_1'})
 
     def test_groups_with_no_subscriptions(self):
-        result = log_handler_subscription.log_groups_with_no_subscriptions(self.log_group_names, set(['/aws/prefix/group_2']))
+        result = log_handler_subscription.log_groups_with_no_subscriptions(self.log_group_names, {'/aws/prefix/group_2'})
 
-        self.assertEqual(result, set([self.log_group_name_prefix + 'group_1', 'group_3']))
+        self.assertEqual(result, {self.log_group_name_prefix + 'group_1', 'group_3'})
 
     def test_get_log_handler_arn(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -64,7 +64,7 @@ class TestLambda(unittest.TestCase):
 
     def test_subsciption_filters_name_ending_in_slash(self):
         log_client = MagicMock()
-        log_handler_subscription.create_subscription_filters(log_client, set(['/weird_name/']), self.log_handler_arn)
+        log_handler_subscription.create_subscription_filters(log_client, {'/weird_name/'}, self.log_handler_arn)
         calls = [
             call(logGroupName='/weird_name/', filterName='weird_name-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn)
         ]
