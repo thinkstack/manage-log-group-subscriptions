@@ -1,0 +1,32 @@
+{
+  "logGroups": [
+    {
+      "logGroupName": "/aws/prefix/group_1",
+      "creationTime": 123,
+      "retentionInDays": 123,
+      "metricFilterCount": 123,
+      "arn": "string",
+      "storedBytes": 123,
+      "kmsKeyId": "string"
+    },
+    {
+      "logGroupName": "/aws/prefix/group_2",
+      "creationTime": 123,
+      "retentionInDays": 123,
+      "metricFilterCount": 123,
+      "arn": "string",
+      "storedBytes": 123,
+      "kmsKeyId": "string"
+    },
+    {
+      "logGroupName": "group_3",
+      "creationTime": 123,
+      "retentionInDays": 123,
+      "metricFilterCount": 123,
+      "arn": "string",
+      "storedBytes": 123,
+      "kmsKeyId": "string"
+    }
+  ],
+  "nextToken": "string"
+}

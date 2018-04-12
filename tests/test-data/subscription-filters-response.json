@@ -1,0 +1,14 @@
+{
+  "subscriptionFilters": [
+    {
+      "filterName": "string",
+      "logGroupName": "/aws/prefix/group_1",
+      "filterPattern": "string",
+      "destinationArn": "string",
+      "roleArn": "string",
+      "distribution": "Random",
+      "creationTime": 123
+    }
+  ],
+  "nextToken": "string"
+}
