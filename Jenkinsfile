@@ -28,7 +28,20 @@ pipeline {
         stage('Upload to s3') {
             steps {
                 sh("""aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-integration/log_handler_subscription.zip --acl=bucket-owner-full-control
-        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-integration/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control""")
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-integration/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-development/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-development/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-qa/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-qa/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-staging/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-staging/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-externaltest/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-externaltest/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-production/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-production/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip s3://mdtp-lambda-functions-management/log_handler_subscription.zip --acl=bucket-owner-full-control
+        aws s3 cp log_handler_subscription.zip.base64sha256 s3://mdtp-lambda-functions-management/log_handler_subscription.zip.base64sha256 --content-type text/plain --acl=bucket-owner-full-control
+        """)
             }
         }
     }
