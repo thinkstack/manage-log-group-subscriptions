@@ -1,53 +1,41 @@
 {
-  "Configuration": {
-    "FunctionName": "log_handler",
-    "FunctionArn": "12345678A",
-    "Runtime": "python3.6",
-    "Role": "string",
-    "Handler": "string",
-    "CodeSize": 123,
-    "Description": "string",
-    "Timeout": 123,
-    "MemorySize": 123,
-    "LastModified": "string",
-    "CodeSha256": "string",
-    "Version": "string",
-    "VpcConfig": {
-      "SubnetIds": [
-        "string"
-      ],
-      "SecurityGroupIds": [
-        "string"
-      ],
-      "VpcId": "string"
-    },
-    "DeadLetterConfig": {
-      "TargetArn": "string"
-    },
-    "Environment": {
-      "Variables": {
-        "string": "string"
-      },
-      "Error": {
-        "ErrorCode": "string",
-        "Message": "string"
-      }
-    },
-    "KMSKeyArn": "string",
-    "TracingConfig": {
-      "Mode": "Active"
-    },
-    "MasterArn": "string",
-    "RevisionId": "string"
+  "FunctionName": "log_handler",
+  "FunctionArn": "12345678A",
+  "Runtime": "python3.6",
+  "Role": "string",
+  "Handler": "string",
+  "CodeSize": 123,
+  "Description": "string",
+  "Timeout": 123,
+  "MemorySize": 123,
+  "LastModified": "string",
+  "CodeSha256": "string",
+  "Version": "string",
+  "VpcConfig": {
+    "SubnetIds": [
+      "string"
+    ],
+    "SecurityGroupIds": [
+      "string"
+    ],
+    "VpcId": "string"
   },
-  "Code": {
-    "RepositoryType": "string",
-    "Location": "string"
+  "DeadLetterConfig": {
+    "TargetArn": "string"
   },
-  "Tags": {
-    "string": "string"
+  "Environment": {
+    "Variables": {
+      "string": "string"
+    },
+    "Error": {
+      "ErrorCode": "string",
+      "Message": "string"
+    }
   },
-  "Concurrency": {
-    "ReservedConcurrentExecutions": 123
-  }
+  "KMSKeyArn": "string",
+  "TracingConfig": {
+    "Mode": "Active"
+  },
+  "MasterArn": "string",
+  "RevisionId": "string"
 }
