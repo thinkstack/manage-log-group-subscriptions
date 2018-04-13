@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import boto3
-import json
+
 
 def lambda_handler(event, context):
     log_client = boto3.client('logs', region_name='eu-west-2')
@@ -24,6 +24,7 @@ def get_paginated_log_groups(log_client, next_token):
         return log_client.describe_log_groups(nextToken=next_token)
     else:
         return log_client.describe_log_groups()
+
 
 def get_log_handler_arn(lambda_client):
     response = lambda_client.get_function_configuration(FunctionName='log_handler')
