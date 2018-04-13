@@ -20,15 +20,26 @@ class TestLambda(unittest.TestCase):
         self.log_handler_arn = '12345678A'
 
 
-    def test_get_lambda_log_groups(self):
+    def test_get_lambda_log_groups_with_pagination(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        with open(dir_path + "/test-data/log-group-response.json") as json_data:
+        with open(dir_path + "/test-data/log-group-response.json") as json_data_1:
+            with open(dir_path + "/test-data/log-group-response-no-token.json") as json_data_2:
+                lambda_client = MagicMock()
+                lambda_client.describe_log_groups.side_effect = [json.load(json_data_1), json.load(json_data_2)]
+                response = log_handler_subscription.get_log_group_names(lambda_client, [], None)
+
+                lambda_client.describe_log_groups.assert_has_calls([call(), call(nextToken='abcd')])
+                self.assertEqual(response, self.log_group_names + ['group_4'])
+
+    def test_get_lambda_log_groups_without_pagination(self):
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with open(dir_path + "/test-data/log-group-response-no-token.json") as json_data:
             lambda_client = MagicMock()
             lambda_client.describe_log_groups.return_value = json.load(json_data)
-            response = log_handler_subscription.get_log_group_names(lambda_client)
+            response = log_handler_subscription.get_log_group_names(lambda_client, [], None)
 
             lambda_client.describe_log_groups.assert_called_once_with()
-            self.assertEqual(response, self.log_group_names)
+            self.assertEqual(response, ['group_4'])
 
     def test_get_log_handler_arn(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))

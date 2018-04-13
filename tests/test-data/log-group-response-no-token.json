@@ -1,0 +1,13 @@
+{
+  "logGroups": [
+    {
+      "logGroupName": "group_4",
+      "creationTime": 123,
+      "retentionInDays": 123,
+      "metricFilterCount": 123,
+      "arn": "string",
+      "storedBytes": 123,
+      "kmsKeyId": "string"
+    }
+  ]
+}

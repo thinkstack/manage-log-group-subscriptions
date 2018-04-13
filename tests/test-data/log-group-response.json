@@ -28,5 +28,5 @@
       "kmsKeyId": "string"
     }
   ],
-  "nextToken": "string"
+  "nextToken": "abcd"
 }
