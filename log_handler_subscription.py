@@ -16,7 +16,7 @@ def lambda_handler(event, context):
 def get_log_group_names(log_client):
     response = log_client.describe_log_groups()
     # TODO: retry on token
-    return set(map(lambda x: x['logGroupName'], response['logGroups']))
+    return list(map(lambda x: x['logGroupName'], response['logGroups']))
 
 
 def get_log_handler_arn(lambda_client):

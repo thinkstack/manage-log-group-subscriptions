@@ -3,17 +3,20 @@ import log_handler_subscription
 import unittest
 import os
 import json
+import boto3
+import botocore
+from botocore.stub import Stubber
 
 
 class TestLambda(unittest.TestCase):
 
     def setUp(self):
         self.log_group_name_prefix = '/aws/prefix/'
-        self.log_group_names = {
+        self.log_group_names = [
             self.log_group_name_prefix + 'group_1',
             self.log_group_name_prefix + 'group_2',
             'group_3'
-        }
+        ]
         self.log_handler_arn = '12345678A'
 
 
@@ -56,3 +59,45 @@ class TestLambda(unittest.TestCase):
         ]
 
         log_client.put_subscription_filter.assert_has_calls(calls, any_order=True)
+
+    def test_subscription_filters_already_exist_for_log_group(self):
+        log_client = boto3.client('logs')
+        stubber = Stubber(log_client)
+        stubber.activate()
+        params = {'logGroupName': 'logGroup', 'filterName': 'logGroup-log-handler-lambda-subscription', 'filterPattern': '', 'destinationArn': self.log_handler_arn}
+        stubber.add_client_error(method='put_subscription_filter', service_error_code='LimitExceededException', expected_params=params)
+        log_handler_subscription.create_subscription_filters(log_client, ['logGroup'], self.log_handler_arn)
+
+        stubber.assert_no_pending_responses()
+        stubber.deactivate()
+
+    def test_subscription_filters_sending_loggers_log_group(self):
+        log_client = boto3.client('logs')
+        stubber = Stubber(log_client)
+        stubber.activate()
+        success_params = {'logGroupName': 'logGroup2', 'filterName': 'logGroup2-log-handler-lambda-subscription', 'filterPattern': '', 'destinationArn': self.log_handler_arn}
+        stubber.add_response(method='put_subscription_filter', service_response={}, expected_params=success_params)
+        error_params = {'logGroupName': 'logGroup', 'filterName': 'logGroup-log-handler-lambda-subscription', 'filterPattern': '', 'destinationArn': self.log_handler_arn}
+        stubber.add_client_error(method='put_subscription_filter', service_error_code='InvalidParameterException', expected_params=error_params)
+        log_handler_subscription.create_subscription_filters(log_client, ['logGroup2', 'logGroup'], self.log_handler_arn)
+
+        stubber.assert_no_pending_responses()
+        stubber.deactivate()
+
+    def test_subscription_filters_uncaught_exception(self):
+        log_client = boto3.client('logs')
+        stubber = Stubber(log_client)
+        stubber.activate()
+
+        error_params = {'logGroupName': 'logGroup', 'filterName': 'logGroup-log-handler-lambda-subscription', 'filterPattern': '', 'destinationArn': self.log_handler_arn}
+        stubber.add_client_error(method='put_subscription_filter', service_error_code='RandomError', expected_params=error_params)
+        success_params = {'logGroupName': 'logGroup2', 'filterName': 'logGroup2-log-handler-lambda-subscription', 'filterPattern': '', 'destinationArn': self.log_handler_arn}
+        stubber.add_response(method='put_subscription_filter', service_response={}, expected_params=success_params)
+
+        try:
+            log_handler_subscription.create_subscription_filters(log_client, ['logGroup', 'logGroup2'], self.log_handler_arn)
+        except botocore.exceptions.ClientError as e:
+            self.assertEqual(e.response['Error']['Code'], 'RandomError')
+
+        self.assertEqual(len(stubber._queue), 1)
+        stubber.deactivate()
