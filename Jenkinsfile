@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Build artefact') {
             steps {
-                sh('docker run -t -v $(pwd):/data amazonlinux /data/package.sh')
+                sh('docker run -t -v $(pwd):/data amazonlinux:2017.03.1.20170812 /data/package.sh')
             }
         }
         stage('Generate sha256') {
