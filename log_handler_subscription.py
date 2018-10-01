@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+
 import boto3
 
 
@@ -32,7 +34,10 @@ def get_log_handler_arn(lambda_client):
 
 
 def create_subscription_filters(log_client, log_group_names, log_handler_arn):
+    excluded_log_group_names = os.getenv('EXCLUDED_LOG_GROUPS', '').split(',')
     for log_group_name in log_group_names:
+        if log_group_name in excluded_log_group_names:
+            continue
         function_name = get_function_name(log_group_name)
         try:
             log_client.put_subscription_filter(

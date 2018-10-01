@@ -11,6 +11,10 @@ from botocore.stub import Stubber
 class TestLambda(unittest.TestCase):
 
     def setUp(self):
+        try:
+            del os.environ['EXCLUDED_LOG_GROUPS']
+        except KeyError:
+            pass
         self.log_group_name_prefix = '/aws/prefix/'
         self.log_group_names = [
             self.log_group_name_prefix + 'group_1',
@@ -61,6 +65,21 @@ class TestLambda(unittest.TestCase):
         ]
 
         log_client.put_subscription_filter.assert_has_calls(calls, any_order=True)
+        assert 3 == log_client.put_subscription_filter.call_count
+
+    def test_create_subscription_filters_excludes_the_requested_log_groups(self):
+        log_client = MagicMock()
+        os.environ['EXCLUDED_LOG_GROUPS'] = 'mdtp-log-flows,psn-log-flows,hmrc_core_connectivity-flow-logs'
+        self.log_group_names.extend(['mdtp-log-flows', 'psn-log-flows', 'hmrc_core_connectivity-flow-logs'])
+        log_handler_subscription.create_subscription_filters(log_client, self.log_group_names, self.log_handler_arn)
+        calls = [
+            call(logGroupName=self.log_group_name_prefix + 'group_1', filterName='group_1-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn),
+            call(logGroupName=self.log_group_name_prefix + 'group_2', filterName='group_2-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn),
+            call(logGroupName='group_3', filterName='group_3-log-handler-lambda-subscription', filterPattern='', destinationArn=self.log_handler_arn)
+        ]
+
+        log_client.put_subscription_filter.assert_has_calls(calls, any_order=True)
+        assert 3 == log_client.put_subscription_filter.call_count
 
     def test_subsciption_filters_name_ending_in_slash(self):
         log_client = MagicMock()
