@@ -1,11 +1,15 @@
-from mock import MagicMock, patch, call
-import log_handler_subscription
-import unittest
-import os
 import json
+import os
+import unittest
+
 import boto3
 import botocore
+from botocore.exceptions import ClientError
 from botocore.stub import Stubber
+from mock import call
+from mock import MagicMock
+
+import log_handler_subscription
 
 
 class TestLambda(unittest.TestCase):

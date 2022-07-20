@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "log-handler-subscription-lambda"
+version = "0.1.0"
+description = "Useful Python script to control CloudWatch Log Group subscription filters"
+authors = ["Team Telemetry <telemetry@digital.hmrc.gov.uk>"]
+license = "Apache 2.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+boto3 = "^1.24.33"
+aws-lambda-powertools = "^1.26.5"
+progress = "^1.6"
+
+[tool.poetry.dev-dependencies]
+aws-profile = "^0.6.1"
+awscli = "^1.25.33"
+bandit = "^1.7.4"
+black = "^22.6.0"
+mock = "^4.0.3"
+nose = "^1.3.7"
+flake8 = "^4.0.1"
+coverage = "^6.4.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

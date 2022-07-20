@@ -20,4 +20,3 @@ dist
 **/__pycache__
 **/.coverage
 venv/
-    
