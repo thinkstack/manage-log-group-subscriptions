@@ -20,7 +20,7 @@ repos:
         name: Fix trailing whitespaces
       - id: end-of-file-fixer
         name: Fix missing end-of-file line returns
-        exclude: repository.yaml|tests/test-data/
+        exclude: _config.yml|repository.yaml|tests/test-data/
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v3.8.2
     hooks:
@@ -38,14 +38,3 @@ repos:
         name: Run Bandit
         args: [-ll, -s, B301]
         language_version: python3
-  - repo: https://github.com/hmrc/security-git-hooks
-    rev: release/1.9.0
-    hooks:
-      - id: secrets_filecontent
-        name: Checking staged files for sensitive content
-        exclude: ".tar$|.gz$|.jar$|.7z$|.rar$|.bz2$|.zip$|.gzip$|.war$|.ear$|.xlsx$|.xls$|
-                    |.docx$|.doc$|.pptx$|.pdf$|.jpg$|.png$|.jpeg$|.tif$|.tiff$|.gif$|.bmp$|.webp$|.svg$|.ico$|.psd$|.exe$|.dll$|.dmg$|.de$|.rpm$"
-      - id: secrets_filename
-        name: Checking staged files for sensitive file types
-        exclude: ".tar$|.gz$|.jar$|.7z$|.rar$|.bz2$|.zip$|.gzip$|.war$|.ear$|.xlsx$|.xls$|
-                    |.docx$|.doc$|.pptx$|.pdf$|.jpg$|.png$|.jpeg$|.tif$|.tiff$|.gif$|.bmp$|.webp$|.svg$|.ico$|.psd$|.exe$|.dll$|.dmg$|.de$|.rpm$"

@@ -10,11 +10,13 @@ from progress.bar import Bar
 
 function_to_execute = ""
 excluded_log_group_names = os.getenv("EXCLUDED_LOG_GROUPS", "").split(",")
+old_lambda_name = os.getenv("OLD_LAMBDA_NAME", "")
+new_lambda_name = os.getenv("NEW_LAMBDA_NAME", "")
 
 config = Config(retries=dict(max_attempts=10))
 lambda_client = boto3.client("lambda", region_name="eu-west-2", config=config)
 log_client = boto3.client("logs", region_name="eu-west-2", config=config)
-logger = Logger(service="log-handler-subscription-lambda")
+logger = Logger(service="manage-log-group-subscriptions")
 
 
 def get_function_name(log_group_name):
@@ -49,8 +51,8 @@ def get_log_group_names(previous_group_names, next_token):
 
 
 def get_lambda_and_log_groups_details():
-    log_handler_arn = get_lambda_arn("log_handler")
-    aws_lambda_log_handler_arn = get_lambda_arn("aws-lambda-log-handler")
+    log_handler_arn = get_lambda_arn(old_lambda_name)
+    aws_lambda_log_handler_arn = get_lambda_arn(new_lambda_name)
     log_groups = get_log_group_names([], None)
     return log_handler_arn, aws_lambda_log_handler_arn, log_groups
 
