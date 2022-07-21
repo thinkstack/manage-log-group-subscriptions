@@ -13,11 +13,11 @@ help: ## The help text you're reading
 .PHONY: help
 
 bandit: ## Run bandit against python code
-	@poetry run bandit -r ./main.py ./tests/* -c .bandit
+	@poetry run bandit -r ./main.py -c .bandit
 .PHONY: bandit
 
 black: ## Run black against python code
-	@poetry run black ./ ./tests
+	@poetry run black ./
 .PHONY: black
 
 check_poetry: check_python ## Check Poetry installation
@@ -62,8 +62,3 @@ setup: check_poetry ## Setup virtualenv & dependencies using poetry and set-up t
 	@poetry install --no-root
 	@poetry run pre-commit install
 .PHONY: setup
-
-test: ## Run unit tests
-	@poetry run nosetests --verbose --with-cover --cover-erase --cover-package=./ tests/*.py
-	flake8 ./*.py
-.PHONY: test
